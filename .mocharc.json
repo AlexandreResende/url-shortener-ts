@@ -1,0 +1,5 @@
+{
+  "watch-files": ["tests/**/*.spec.ts", "src/**/*.ts"],
+  "recursive": true,
+  "file": "tests/setup"
+}
