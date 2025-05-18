@@ -1,4 +1,4 @@
-// import 'reflect-metadata';
+import 'reflect-metadata';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
