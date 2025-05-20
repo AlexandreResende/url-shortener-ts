@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response, Router } from "express";
 import { container, injectable, injectAll, Lifecycle, scoped } from "tsyringe";
-import Controller, { CustomRequest } from "../controllers/Controller";
+import Controller from "../controllers/Controller";
 import { expressHandler } from "../middlewares/ExpressHandler";
 
 export type HttpVerb = 'get' | 'put' | 'post' | 'patch' | 'delete';

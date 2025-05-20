@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import { Lifecycle, registry, scoped } from "tsyringe";
 
 import Controller, { CustomRequest, CustomRequestHandler, CustomResponse } from "./Controller";
