@@ -14,6 +14,10 @@ const ENVIRONMENT = {
   },
   CAPACITY: {
     AMOUNT_OF_REQUEST_PER_MONTH:requiredEnvVar(process.env.AMOUNT_OF_REQUEST_PER_MONTH, 'AMOUNT_OF_REQUEST_PER_MONTH'),
+  },
+  CRYPTOGRAPHY: {
+    SECRET: requiredEnvVar(process.env.CRYPTOGRAPHY_SECRET, 'CRYPTOGRAPHY_SECRET'),
+    IV: requiredEnvVar(process.env.CRYPTOGRAPHY_IV, 'CRYPTOGRAPHY_IV')
   }
 };
 
