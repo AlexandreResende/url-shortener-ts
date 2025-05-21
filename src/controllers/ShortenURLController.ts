@@ -20,7 +20,7 @@ class ShortenURLController extends Controller<unknown, ShortenURLRequest, unknow
   constructor(
     @inject('ShortenURLCommand') private readonly command: Command<ShortenURLCommandParameters, ShortenURLCommandReturn>
   ) {
-    super('get', '/shorten');
+    super('post', '/shorten');
   }
 
   async handleRequest(req: CustomRequest<unknown, ShortenURLRequest, unknown>, res: CustomResponse<ShortenURLResponse>): Promise<void> {
