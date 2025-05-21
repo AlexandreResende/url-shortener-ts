@@ -9,8 +9,8 @@ describe('Integration Tests', function() {
       request
         .agent(app)
         .get('/healthz')
-        .expect(200)
         .end((_, res) => {
+          expect(res.status).to.be.equal(200);
           expect(res.body.message).to.be.equal('Application healthy');
 
           done();
