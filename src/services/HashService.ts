@@ -1,8 +1,11 @@
 import crypto from "crypto";
 
 import ENVIRONMENT from "../Environment";
+import { Lifecycle, registry, scoped } from "tsyringe";
 
 
+@scoped(Lifecycle.ResolutionScoped)
+@registry([{ token: 'HashService', useClass: HashService }])
 export default class HashService {
   private readonly inputLength: number;
 

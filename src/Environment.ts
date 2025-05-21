@@ -11,6 +11,7 @@ const requiredEnvVar = (environmentVariable: any, variableName: string): any=> {
 const ENVIRONMENT = {
   SERVER: {
     PORT: process.env.PORT || 3000,
+    BASE_URL: `localhost:${process.env.PORT}`,
   },
   CAPACITY: {
     AMOUNT_OF_REQUEST_PER_MONTH:requiredEnvVar(process.env.AMOUNT_OF_REQUEST_PER_MONTH, 'AMOUNT_OF_REQUEST_PER_MONTH'),
