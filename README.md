@@ -7,3 +7,7 @@ TLDR: URL shortener written in Typescript
 The idea is to create a URL shortener using MongoDB, Postgres and Redis.  
 Each one representing a cache layer to test each one of them in three different branches.  
 No benchmark will be provided for seeing which one is the best. The idea is to practice them.  
+
+## TO DO
+
+- Implement on shorten URL endpoint a re-hash when hash key already exist on DB
