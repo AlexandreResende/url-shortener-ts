@@ -22,8 +22,12 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
 
   async execute(parameters: ShortenURLCommandParameters): Promise<ShortenURLCommandReturn> {
     const oldURL = parameters.url;
-    const hashedURL = this.hashService.hash(oldURL);
+    let hashedURL = this.hashService.hash(oldURL);
     const fullURL = `${ENVIRONMENT.SERVER.BASE_URL}/${hashedURL}`
+
+    while (db.get(hashedURL)) {
+      hashedURL = this.hashService.hash(hashedURL);
+    }
 
     db.set(hashedURL, parameters.url);
 
