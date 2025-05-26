@@ -25,7 +25,7 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
     const hashedURL = this.hashService.hash(oldURL);
     const fullURL = `${ENVIRONMENT.SERVER.BASE_URL}/${hashedURL}`
 
-    db.set(hashedURL, fullURL);
+    db.set(hashedURL, parameters.url);
 
     return { url: fullURL };
   }
