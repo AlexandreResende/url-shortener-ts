@@ -1,0 +1,14 @@
+{
+  "all": true,
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "tests/*.spec.ts",
+    "src/Environment.ts"
+  ],
+  "excludeNodeModules": true,
+  "check-coverage": true,
+  "branches": 80,
+  "lines": 80
+}
