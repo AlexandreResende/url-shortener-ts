@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "dotenv": "^16.5.0",
+    "redis": "^5.1.1",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0"
   }
