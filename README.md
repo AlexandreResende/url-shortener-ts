@@ -11,3 +11,7 @@ No benchmark will be provided for seeing which one is the best. The idea is to p
 For redis the branch is:
 >feature/redis
 
+## TODO
+
+> Add TTL to redis records
+> Check distributed caching for handling high traffic
