@@ -19,6 +19,9 @@ const ENVIRONMENT = {
   CRYPTOGRAPHY: {
     SECRET: requiredEnvVar(process.env.CRYPTOGRAPHY_SECRET, 'CRYPTOGRAPHY_SECRET'),
     IV: requiredEnvVar(process.env.CRYPTOGRAPHY_IV, 'CRYPTOGRAPHY_IV')
+  },
+  CACHE: {
+    TTL: Number(process.env.REDIS_TTL || 0),
   }
 };
 
