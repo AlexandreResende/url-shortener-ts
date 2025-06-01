@@ -20,3 +20,7 @@ For redis the branch is:
 
 > feature/postgres    
 
+## TODO
+
+> Add TTL to redis records
+> Check distributed caching for handling high traffic
