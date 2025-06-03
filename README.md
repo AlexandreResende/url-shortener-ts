@@ -13,5 +13,10 @@ No benchmark will be provided for seeing which one is the best. The idea is to p
 - Add a load balancer like HAProxy to test its functionalities on every branch of this repo
 
 For redis the branch is:
->feature/redis
+
+> feature/redis    
+
+> feature/mongodb    
+
+> feature/postgres    
 
