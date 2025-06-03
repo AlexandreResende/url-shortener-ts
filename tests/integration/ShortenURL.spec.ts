@@ -23,5 +23,22 @@ describe('Integration tests', function() {
           done();
         });
     });
+
+    it('returns a 400 - Bad Request when an URL is not passed', function(done) {
+      request
+        .agent(app)
+        .post('/shorten')
+        .send({ url: undefined })
+        .end((_, res) => {
+          const body = res.body;
+
+          expect(res.status).to.be.equal(400);
+          expect(typeof body.error).to.be.equal('object');
+          expect(body.error.length).to.be.equal(1);
+          expect(body.error[0]).to.be.equal('"url" is required');
+
+          done();
+        });
+    });
   });
 });
