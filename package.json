@@ -25,26 +25,26 @@
   "devDependencies": {
     "@faker-js/faker": "^9.8.0",
     "@types/chai-as-promised": "^8.0.2",
-    "@types/express": "^5.0.1",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.18",
     "@types/sinon": "^17.0.4",
     "@types/supertest": "^6.0.3",
     "chai": "^5.2.0",
     "chai-as-promised": "^8.0.1",
-    "express": "^5.1.0",
     "mocha": "^11.2.2",
     "nodemon": "^3.1.10",
     "nyc": "^17.1.0",
     "sinon": "^20.0.0",
-    "supertest": "^7.1.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "supertest": "^7.1.1"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
     "joi": "^17.13.3",
     "reflect-metadata": "^0.2.2",
-    "tsyringe": "^4.10.0"
+    "tsyringe": "^4.10.0",
+    "@types/express": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.18",
+    "express": "^5.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
