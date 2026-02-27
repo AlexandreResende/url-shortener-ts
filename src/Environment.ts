@@ -11,15 +11,18 @@ const requiredEnvVar = (environmentVariable: any, variableName: string): any=> {
 const ENVIRONMENT = {
   SERVER: {
     PORT: process.env.PORT || 3000,
-    BASE_URL: `localhost:${process.env.PORT}`,
+    BASE_URL: process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`,
   },
   CAPACITY: {
-    AMOUNT_OF_REQUEST_PER_MONTH:requiredEnvVar(process.env.AMOUNT_OF_REQUEST_PER_MONTH, 'AMOUNT_OF_REQUEST_PER_MONTH'),
+    AMOUNT_OF_REQUEST_PER_MONTH: requiredEnvVar(process.env.AMOUNT_OF_REQUEST_PER_MONTH, 'AMOUNT_OF_REQUEST_PER_MONTH'),
   },
   CRYPTOGRAPHY: {
     SECRET: requiredEnvVar(process.env.CRYPTOGRAPHY_SECRET, 'CRYPTOGRAPHY_SECRET'),
-    IV: requiredEnvVar(process.env.CRYPTOGRAPHY_IV, 'CRYPTOGRAPHY_IV')
-  }
+    IV: requiredEnvVar(process.env.CRYPTOGRAPHY_IV, 'CRYPTOGRAPHY_IV'),
+  },
+  URL: {
+    TTL_HOURS: process.env.URL_TTL_HOURS ? parseInt(process.env.URL_TTL_HOURS, 10) : null,
+  },
 };
 
 export default ENVIRONMENT;

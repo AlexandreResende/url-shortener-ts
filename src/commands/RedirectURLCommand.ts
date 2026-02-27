@@ -16,13 +16,21 @@ class RedirectURLCommand implements Command<RedirectURLCommandParameters, Redire
   constructor() {}
 
   async execute(parameters: RedirectURLCommandParameters): Promise<RedirectURLCommandReturn> {
-    const url = db.get(parameters.urlId);
+    const record = db.get(parameters.urlId);
 
-    if (!url) {
+    if (!record) {
       return { url: undefined };
     }
 
-    return { url };
+    if (record.expiresAt && new Date() > record.expiresAt) {
+      db.delete(parameters.urlId);
+      return { url: undefined };
+    }
+
+    record.clicks++;
+    record.lastAccessedAt = new Date();
+
+    return { url: record.originalUrl };
   }
 }
 
