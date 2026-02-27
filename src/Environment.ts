@@ -23,6 +23,9 @@ const ENVIRONMENT = {
   URL: {
     TTL_HOURS: process.env.URL_TTL_HOURS ? parseInt(process.env.URL_TTL_HOURS, 10) : null,
   },
+  CACHE: {
+    TTL: Number(process.env.REDIS_TTL || 0),
+  }
 };
 
 export default ENVIRONMENT;
