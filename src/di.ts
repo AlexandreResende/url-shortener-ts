@@ -1,3 +1,7 @@
+import './repositories/Redis/Client';
+
+import './repositories/Redis/URLRepository';
+
 import './services/HashService';
 
 import './commands/ShortenURLCommand';

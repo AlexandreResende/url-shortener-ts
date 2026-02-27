@@ -1,9 +1,9 @@
 import { inject, Lifecycle, registry, scoped } from "tsyringe";
 
-import db from "../localDB";
 import { Command } from "./Command";
 import ENVIRONMENT from "../Environment";
 import HashService from "../services/HashService";
+import URLRepository from "../repositories/Redis/URLRepository";
 
 const MAX_COLLISION_RETRIES = 5;
 
@@ -20,6 +20,7 @@ export interface ShortenURLCommandReturn {
 class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenURLCommandReturn> {
   constructor(
     @inject('HashService') private readonly hashService: HashService,
+    @inject('URLRepository') private readonly repository: URLRepository,
   ) {}
 
   async execute(parameters: ShortenURLCommandParameters): Promise<ShortenURLCommandReturn> {
@@ -40,6 +41,9 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
       }
       hashedURL = this.hashService.hash(hashedURL);
     }
+    const fullURL = `${ENVIRONMENT.SERVER.BASE_URL}/${hashedURL}`
+    
+    await this.repository.setKey(hashedURL, oldURL);
 
     const now = new Date();
     const ttlHours = ENVIRONMENT.URL.TTL_HOURS;
