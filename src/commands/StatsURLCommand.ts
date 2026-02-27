@@ -1,6 +1,7 @@
-import { Lifecycle, registry, scoped } from "tsyringe";
-import db, { URLRecord } from "../localDB";
+import { inject, Lifecycle, registry, scoped } from "tsyringe";
+import { URLRecord } from "../localDB";
 import { Command } from "./Command";
+import URLRepository from "../repositories/Redis/URLRepository";
 
 export interface StatsURLCommandParameters {
   urlId: string;
@@ -11,17 +12,19 @@ export type StatsURLCommandReturn = Omit<URLRecord, 'hash'> | undefined;
 @scoped(Lifecycle.ResolutionScoped)
 @registry([{ token: 'StatsURLCommand', useClass: StatsURLCommand }])
 class StatsURLCommand implements Command<StatsURLCommandParameters, StatsURLCommandReturn> {
-  constructor() {}
+  constructor(
+    @inject('URLRepository') private readonly repository: URLRepository,
+  ) {}
 
   async execute(parameters: StatsURLCommandParameters): Promise<StatsURLCommandReturn> {
-    const record = db.get(parameters.urlId);
+    const record = await this.repository.findByHash(parameters.urlId);
 
     if (!record) {
       return undefined;
     }
 
     if (record.expiresAt && new Date() > record.expiresAt) {
-      db.delete(parameters.urlId);
+      await this.repository.delete(parameters.urlId);
       return undefined;
     }
 

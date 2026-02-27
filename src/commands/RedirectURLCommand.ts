@@ -1,7 +1,5 @@
 import { inject, Lifecycle, registry, scoped } from "tsyringe";
 
-import db from "../localDB";
-
 import { Command } from "./Command";
 import URLRepository from "../repositories/Redis/URLRepository";
 
@@ -21,19 +19,20 @@ class RedirectURLCommand implements Command<RedirectURLCommandParameters, Redire
   ) {}
 
   async execute(parameters: RedirectURLCommandParameters): Promise<RedirectURLCommandReturn> {
-    const record = db.get(parameters.urlId);
+    const record = await this.repository.findByHash(parameters.urlId);
 
     if (!record) {
       return { url: undefined };
     }
 
     if (record.expiresAt && new Date() > record.expiresAt) {
-      db.delete(parameters.urlId);
+      await this.repository.delete(parameters.urlId);
       return { url: undefined };
     }
 
     record.clicks++;
     record.lastAccessedAt = new Date();
+    await this.repository.update(parameters.urlId, record);
 
     return { url: record.originalUrl };
   }

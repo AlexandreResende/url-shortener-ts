@@ -15,8 +15,9 @@ describe('Integration tests', function() {
     it('shortens a URL successfully', function(done) {
       const url = faker.internet.url();
 
-      Sinon.stub(URLRepository.prototype, 'getKey').resolves(null);
-      Sinon.stub(URLRepository.prototype, 'setKey').resolves();
+      Sinon.stub(URLRepository.prototype, 'findByUrl').resolves(null);
+      Sinon.stub(URLRepository.prototype, 'exists').resolves(false);
+      Sinon.stub(URLRepository.prototype, 'save').resolves();
 
       request
         .agent(app)
@@ -36,10 +37,11 @@ describe('Integration tests', function() {
     it('shortens a URL successfully even when hash already exists', function(done) {
       const url = faker.internet.url();
 
-      Sinon.stub(URLRepository.prototype, 'getKey')
-        .onFirstCall().resolves(faker.internet.url())
-        .onSecondCall().resolves(null);
-      Sinon.stub(URLRepository.prototype, 'setKey').resolves();
+      Sinon.stub(URLRepository.prototype, 'findByUrl').resolves(null);
+      Sinon.stub(URLRepository.prototype, 'exists')
+        .onFirstCall().resolves(true)
+        .onSecondCall().resolves(false);
+      Sinon.stub(URLRepository.prototype, 'save').resolves();
 
       request
         .agent(app)

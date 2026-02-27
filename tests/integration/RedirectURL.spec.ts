@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import request from 'supertest';
 import { faker } from '@faker-js/faker';
+import Sinon from 'sinon';
 
 import app from '../../src';
-import db from '../../src/localDB';
 import HashService from '../../src/services/HashService';
-import Sinon from 'sinon';
 import URLRepository from '../../src/repositories/Redis/URLRepository';
 
 describe('Integration test', function() {
@@ -20,7 +19,7 @@ describe('Integration test', function() {
       const url = faker.internet.url();
       const hashedURL = hashService.hash(url);
 
-      db.set(hashedURL, {
+      Sinon.stub(URLRepository.prototype, 'findByHash').resolves({
         originalUrl: url,
         hash: hashedURL,
         createdAt: new Date(),
@@ -28,6 +27,7 @@ describe('Integration test', function() {
         clicks: 0,
         lastAccessedAt: null,
       });
+      Sinon.stub(URLRepository.prototype, 'update').resolves();
 
       request
         .agent(app)
@@ -39,11 +39,11 @@ describe('Integration test', function() {
         });
     });
 
-    it('returns a 404 when hashed doesnt not exist', function(done) {
+    it('returns a 404 when hashed does not exist', function(done) {
       const url = faker.internet.url();
       const hashedURL = hashService.hash(url);
 
-      Sinon.stub(URLRepository.prototype, 'getKey').resolves(null);
+      Sinon.stub(URLRepository.prototype, 'findByHash').resolves(null);
 
       request
         .agent(app)
@@ -60,7 +60,7 @@ describe('Integration test', function() {
       const url = faker.internet.url();
       const hashedURL = hashService.hash(url);
 
-      db.set(hashedURL, {
+      Sinon.stub(URLRepository.prototype, 'findByHash').resolves({
         originalUrl: url,
         hash: hashedURL,
         createdAt: new Date(),
@@ -68,6 +68,7 @@ describe('Integration test', function() {
         clicks: 0,
         lastAccessedAt: null,
       });
+      Sinon.stub(URLRepository.prototype, 'delete').resolves();
 
       request
         .agent(app)
@@ -84,7 +85,7 @@ describe('Integration test', function() {
       const url = faker.internet.url();
       const hashedURL = hashService.hash(url);
 
-      db.set(hashedURL, {
+      Sinon.stub(URLRepository.prototype, 'findByHash').resolves({
         originalUrl: url,
         hash: hashedURL,
         createdAt: new Date(),
@@ -92,18 +93,18 @@ describe('Integration test', function() {
         clicks: 0,
         lastAccessedAt: null,
       });
+      const updateStub = Sinon.stub(URLRepository.prototype, 'update').resolves();
 
       request
         .agent(app)
         .get(`/${hashedURL}`)
         .end((_, res) => {
           expect(res.status).to.be.equal(301);
+          expect(updateStub.calledOnce).to.be.true;
 
-          const record = db.get(hashedURL);
-          expect(record?.clicks).to.be.equal(1);
-          expect(record?.lastAccessedAt).to.not.be.null;
-
-          db.delete(hashedURL);
+          const updatedRecord = updateStub.firstCall.args[1];
+          expect(updatedRecord.clicks).to.be.equal(1);
+          expect(updatedRecord.lastAccessedAt).to.not.be.null;
 
           done();
         });

@@ -23,8 +23,9 @@ const ENVIRONMENT = {
   URL: {
     TTL_HOURS: process.env.URL_TTL_HOURS ? parseInt(process.env.URL_TTL_HOURS, 10) : null,
   },
-  CACHE: {
-    TTL: Number(process.env.REDIS_TTL || 0),
+  REDIS: {
+    URL: process.env.REDIS_URL || 'redis://localhost:6379',
+    CACHE_TTL: Number(process.env.REDIS_TTL || 0),
   }
 };
 

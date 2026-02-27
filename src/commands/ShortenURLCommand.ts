@@ -26,7 +26,7 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
   async execute(parameters: ShortenURLCommandParameters): Promise<ShortenURLCommandReturn> {
     const originalUrl = parameters.url;
 
-    const existing = db.findByUrl(originalUrl);
+    const existing = await this.repository.findByUrl(originalUrl);
     if (existing && !this.isExpired(existing.expiresAt)) {
       return { url: `${ENVIRONMENT.SERVER.BASE_URL}/${existing.hash}` };
     }
@@ -34,21 +34,18 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
     let hashedURL = this.hashService.hash(originalUrl);
     let retries = 0;
 
-    while (db.has(hashedURL)) {
+    while (await this.repository.exists(hashedURL)) {
       retries++;
       if (retries > MAX_COLLISION_RETRIES) {
         throw new Error('Max collision retries exceeded. Hash space may be saturated.');
       }
       hashedURL = this.hashService.hash(hashedURL);
     }
-    const fullURL = `${ENVIRONMENT.SERVER.BASE_URL}/${hashedURL}`
-    
-    await this.repository.setKey(hashedURL, oldURL);
 
     const now = new Date();
     const ttlHours = ENVIRONMENT.URL.TTL_HOURS;
 
-    db.set(hashedURL, {
+    await this.repository.save(hashedURL, {
       originalUrl,
       hash: hashedURL,
       createdAt: now,
