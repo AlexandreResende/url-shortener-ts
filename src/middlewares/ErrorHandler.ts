@@ -1,8 +1,8 @@
 import { ErrorRequestHandler } from 'express';
+import logger from '../logger';
 
 export const globalErrorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  const message = err instanceof Error ? err.message : 'Unknown error';
-  console.error(`[Error] ${message}`);
+  logger.error({ err }, 'Unhandled error');
 
   res.status(500).json({ error: 'Internal server error' });
 };

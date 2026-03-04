@@ -1,6 +1,7 @@
 import { Lifecycle, registry, scoped } from "tsyringe";
 import db from "../localDB";
 import { Command } from "./Command";
+import logger from "../logger";
 
 export interface RedirectURLCommandParameters {
   urlId: string;
@@ -23,12 +24,15 @@ class RedirectURLCommand implements Command<RedirectURLCommandParameters, Redire
     }
 
     if (record.expiresAt && new Date() > record.expiresAt) {
+      logger.info({ hash: parameters.urlId }, 'Expired URL accessed, deleting');
       db.delete(parameters.urlId);
       return { url: undefined };
     }
 
     record.clicks++;
     record.lastAccessedAt = new Date();
+
+    logger.info({ hash: parameters.urlId, clicks: record.clicks }, 'Redirect performed');
 
     return { url: record.originalUrl };
   }

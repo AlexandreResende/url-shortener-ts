@@ -9,6 +9,8 @@ import ENVIRONMENT from "./Environment";
 import Routers from "./routers/Routers";
 import swaggerSpec from "./swagger";
 import { globalErrorHandler } from "./middlewares/ErrorHandler";
+import { requestLogger } from "./middlewares/RequestLogger";
+import logger from "./logger";
 
 const limiter = rateLimit({
   limit: 50,
@@ -22,6 +24,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(limiter);
+app.use(requestLogger);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -30,22 +33,22 @@ app.use(Routers);
 app.use(globalErrorHandler);
 
 const server = app.listen(ENVIRONMENT.SERVER.PORT, () => {
-  console.log(`Server running on port: ${ENVIRONMENT.SERVER.PORT}`);
-  console.log(`API docs available at: ${ENVIRONMENT.SERVER.BASE_URL}/docs`);
+  logger.info({ port: ENVIRONMENT.SERVER.PORT }, 'Server running');
+  logger.info({ url: `${ENVIRONMENT.SERVER.BASE_URL}/docs` }, 'API docs available');
 });
 
 const SHUTDOWN_TIMEOUT_MS = 10_000;
 
 const shutdown = (signal: string) => {
-  console.log(`\n${signal} received. Shutting down gracefully...`);
+  logger.info({ signal }, 'Shutting down gracefully');
 
   server.close(() => {
-    console.log('Server closed. Exiting.');
+    logger.info('Server closed. Exiting.');
     process.exit(0);
   });
 
   setTimeout(() => {
-    console.error('Forced shutdown after timeout.');
+    logger.error('Forced shutdown after timeout.');
     process.exit(1);
   }, SHUTDOWN_TIMEOUT_MS);
 };

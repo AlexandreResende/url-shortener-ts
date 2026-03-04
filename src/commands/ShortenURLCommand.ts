@@ -4,6 +4,7 @@ import db from "../localDB";
 import { Command } from "./Command";
 import ENVIRONMENT from "../Environment";
 import HashService from "../services/HashService";
+import logger from "../logger";
 
 const MAX_COLLISION_RETRIES = 5;
 
@@ -27,6 +28,7 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
 
     const existing = db.findByUrl(originalUrl);
     if (existing && !this.isExpired(existing.expiresAt)) {
+      logger.info({ hash: existing.hash }, 'Returning existing short URL');
       return { url: `${ENVIRONMENT.SERVER.BASE_URL}/${existing.hash}` };
     }
 
@@ -36,6 +38,7 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
     while (db.has(hashedURL)) {
       retries++;
       if (retries > MAX_COLLISION_RETRIES) {
+        logger.error({ retries, originalUrl }, 'Max collision retries exceeded');
         throw new Error('Max collision retries exceeded. Hash space may be saturated.');
       }
       hashedURL = this.hashService.hash(hashedURL);
@@ -52,6 +55,8 @@ class ShortenURLCommand implements Command<ShortenURLCommandParameters, ShortenU
       clicks: 0,
       lastAccessedAt: null,
     });
+
+    logger.info({ hash: hashedURL }, 'URL shortened');
 
     return { url: `${ENVIRONMENT.SERVER.BASE_URL}/${hashedURL}` };
   }
